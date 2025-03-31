@@ -6,26 +6,15 @@
   display: flex;
   overflow: hidden;
   align-items: center;
-}
-.preview {
-  font-size: 1.4rem;
-  padding: 1rem;
-  text-align: center;
-  border: 1px solid white;
-  border-radius: 15px;
-  width: 120px;
-  position: sticky;
-  background-color: rgb(52, 52, 52);
-  color: white;
+  font-family: "Lato", sans-serif;
 }
 .formContainer {
-  height: 100%;
+  height: 97%;
   width: 50%;
   border: 1px solid white;
-  margin: 2rem 1rem 0 0.5rem;
+  margin: 1rem 1rem 1rem 0.5rem;
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
   border-radius: 15px;
   overflow-y: auto;
 }
@@ -35,6 +24,15 @@
   margin-top: 1.4rem;
   font-size: 1.6rem;
   text-decoration: underline;
+  position: relative;
+}
+.clearBtn{
+  position: absolute;
+  right: 10px;
+  font-weight: 600;
+  padding: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
 }
 .inputsBox {
   width: 100%;
@@ -45,7 +43,9 @@
 .personalInfoContainer,
 .educationInfoContainer,
 .previousWorkExperience,
-.projectsContainer {
+.projectsContainer,
+.skillsContainer,
+.certificationsContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -66,13 +66,27 @@
 .yearContainer,
 .companyNameAndRoleContainer,
 .projectNameAndDescContainer,
-.projectLinksContainer {
+.projectLinksContainer,
+.skillsInputContainer,
+.courseContainer,
+.certificationInputContainer,
+.yearAndLinkContainer {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
   gap: 1rem;
+}
+.certificationInputContainer {
+  align-items: flex-start;
+  flex-direction: column;
+}
+.skillsInputContainer {
+  justify-content: flex-start;
+}
+.yearAndLinkContainer{
+  padding: 0;
 }
 .fname,
 .lname,
@@ -86,7 +100,13 @@
 .role,
 .projectName,
 .codeLink,
-.liveLink {
+.liveLink,
+.skillInput,
+.courseDescription,
+.certificationDate,
+.certificationLink,
+.certificationName,
+.certificationIssuer {
   height: 40px;
   width: 50%;
   border-radius: 5px;
@@ -95,26 +115,25 @@
   border: 1px solid #ccc;
   background-color: rgba(255, 255, 255, 0.9);
 }
-.address {
+.certificationName,
+.certificationIssuer {
+  width: 100%;
+}
+.courseDescription {
+  width: 100%;
+}
+.previewBox{
+  white-space: pre-wrap;
+}
+.address,
+.projectDesc {
   width: 100%;
   border-radius: 10px;
   padding: 0.8rem 1rem;
   font-size: 0.95rem;
   resize: none;
-  margin-bottom: 1rem;
+  margin: 0.5rem 0;
   border: 1px solid #ccc;
-  background-color: rgba(255, 255, 255, 0.9);
-}
-.degree,
-.collegeName,
-.startYear,
-.endYear {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 16px;
   background-color: rgba(255, 255, 255, 0.9);
 }
 .educationContainer,
@@ -126,6 +145,23 @@
   border-radius: 8px;
   margin-bottom: 1rem;
   background-color: rgba(255, 255, 255, 0.1);
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.projectItem{
+  gap: 0.24rem;
+  padding-left: 0;
+}
+.projectItem li{
+  margin-left: 0.5rem;
+  line-height: 1.5rem;
+}
+.projectNameAndLiveContainer{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
 }
 .deleteBtn {
   height: 30px;
@@ -157,23 +193,95 @@
   cursor: pointer;
   align-self: center;
 }
-.projectDesc {
-  width: 100%;
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-  font-size: 0.95rem;
-  resize: none;
-  margin: 0.5rem 0;
-  border: 1px solid #ccc;
-  background-color: rgba(255, 255, 255, 0.9);
+.addCertificationBtn {
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: 5px;
+  background-color: rgba(3, 178, 3, 0.553);
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.certificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+.certificationItem {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.certificationDetails {
+  flex: 1;
+}
+.certificationDetails h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+.certificationDetails p {
+  margin: 0.3rem 0;
+  color: #ddd;
+  font-size: 0.9rem;
+}
+.certificationDetails a {
+  color: #4fc3f7;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.certificationDetails a:hover {
+  text-decoration: underline;
+}
+.deleteCertificationBtn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0 0.5rem;
+}
+.certificationsPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.certificationPreviewItem {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+.certificationPreviewItem h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+.certificationPreviewItem p {
+  margin: 0.3rem 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+.certificationPreviewItem a {
+  color: #2c5364;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.certificationPreviewItem a:hover {
+  text-decoration: underline;
 }
 .resumePage {
-  height: 98%;
+  height: 97%;
   width: 50%;
   padding: 2rem;
   background-color: white;
   color: #333;
   overflow-y: auto;
+  margin-right: 0.5rem;
   border-radius: 10px;
 }
 .resumeContainer {
@@ -191,22 +299,23 @@
 .resumeHeader h1 {
   margin: 0;
   color: #2c5364;
-  font-size: 2rem;
+  font-size: 2.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 .contactInfo {
-  margin-top: 0.2rem;
+  margin-top: 0.5rem;
 }
 .contactInfo p {
   margin: 0.3rem 0;
   color: #555;
   font-size: 1.1rem;
 }
-.emailAndMobile{
+.emailAndMobile {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 }
 .resumeSection {
   margin-bottom: 1.5rem;
@@ -221,7 +330,7 @@
 .educationItem,
 .workItem,
 .projectItem {
-  margin-bottom: 1.2rem;
+  margin: 0 1rem 1.2rem;
 }
 .educationItem h3,
 .workItem h3,
@@ -239,33 +348,84 @@
 }
 .collegeAndYear {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  margin: 0.5rem 0;
 }
 .projectItem a {
   color: #2c5364;
   text-decoration: none;
   word-break: break-all;
 }
-
 .projectItem a:hover {
   text-decoration: underline;
 }
+.preview {
+  font-size: 1.4rem;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid white;
+  border-radius: 15px;
+  width: 120px;
+  position: sticky;
+  background-color: rgb(52, 52, 52);
+  color: white;
+}
+.skillsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+.skillItem {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.deleteSkillBtn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+}
+.addSkillBtn {
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: 5px;
+  background-color: rgba(3, 178, 3, 0.553);
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+.skillsPreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.skillPreviewItem {
+  background-color: #2c5364;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .main {
     flex-direction: column;
     height: auto;
   }
-
   .formContainer,
   .resumePage {
     width: 100%;
     margin: 0;
     border-radius: 0;
   }
-
   .namesContainer,
   .emailAndMobileContainer,
   .degreeAndCollegeContainer,
@@ -284,7 +444,9 @@
   .company,
   .role,
   .codeLink,
-  .liveLink {
+  .liveLink,
+  .skillInput,
+  .courseDescription {
     width: 100%;
   }
 }

@@ -1,99 +1,244 @@
-import React, { useState } from "react"
-import styles from "./Inputs.module.css"
+import React, { useRef, useState, useEffect } from "react";
+import styles from "./Inputs.module.css";
 
 const Inputs = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-  })
+  const loadFromLocalStorage = (key, defaultValue) => {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : defaultValue;
+  };
 
-  const [educationList, setEducationList] = useState([
-    { id: 1, degree: "", college: "", startYear: "", endYear: "" },
-  ])
+  const [formData, setFormData] = useState(
+    loadFromLocalStorage("resumeFormData", {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      address: "",
+    })
+  );
 
-  const [showWorkExperience, setShowWorkExperience] = useState(false)
-  const [workExperience, setWorkExperience] = useState([])
+  const [educationList, setEducationList] = useState(
+    loadFromLocalStorage("resumeEducationList", [
+      {
+        id: 1,
+        degree: "",
+        college: "",
+        courseDescription: "",
+        startYear: "",
+        endYear: "",
+      },
+    ])
+  );
 
-  const [projects, setProjects] = useState([])
+  const skillsAddRef = useRef();
 
-  // Handle personal info changes
+  const [showWorkExperience, setShowWorkExperience] = useState(
+    loadFromLocalStorage("resumeShowWorkExperience", false)
+  );
+
+  const [workExperience, setWorkExperience] = useState(
+    loadFromLocalStorage("resumeWorkExperience", [])
+  );
+
+  const [projects, setProjects] = useState(
+    loadFromLocalStorage("resumeProjects", [])
+  );
+
+  const [skills, setSkills] = useState(
+    loadFromLocalStorage("resumeSkills", [])
+  );
+
+  const [currentSkill, setCurrentSkill] = useState("");
+
+  const [certifications, setCertifications] = useState(
+    loadFromLocalStorage("resumeCertifications", [])
+  );
+
+  const [currentCertification, setCurrentCertification] = useState({
+    name: "",
+    issuer: "",
+    date: "",
+    link: "",
+  });
+
+  useEffect(() => {
+    localStorage.setItem("resumeFormData", JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    localStorage.setItem("resumeEducationList", JSON.stringify(educationList));
+  }, [educationList]);
+
+  useEffect(() => {
+    localStorage.setItem("resumeShowWorkExperience", JSON.stringify(showWorkExperience));
+  }, [showWorkExperience]);
+
+  useEffect(() => {
+    localStorage.setItem("resumeWorkExperience", JSON.stringify(workExperience));
+  }, [workExperience]);
+
+  useEffect(() => {
+    localStorage.setItem("resumeProjects", JSON.stringify(projects));
+  }, [projects]);
+
+  useEffect(() => {
+    localStorage.setItem("resumeSkills", JSON.stringify(skills));
+  }, [skills]);
+
+  useEffect(() => {
+    localStorage.setItem("resumeCertifications", JSON.stringify(certifications));
+  }, [certifications]);
+
+  const clearAllData = (e) => {
+    e.preventDefault();
+    if (window.confirm("Are you sure you want to clear all data?")) {
+      localStorage.clear();
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        address: "",
+      });
+      setEducationList([{
+        id: 1,
+        degree: "",
+        college: "",
+        courseDescription: "",
+        startYear: "",
+        endYear: "",
+      }]);
+      setShowWorkExperience(false);
+      setWorkExperience([]);
+      setProjects([]);
+      setSkills([]);
+      setCertifications([]);
+    }
+  };
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
-    })
-  }
+    });
+  };
 
-  // Handle education changes
   const handleEducationChange = (id, e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setEducationList(
       educationList.map((edu) =>
         edu.id === id ? { ...edu, [name]: value } : edu
       )
-    )
-  }
+    );
+  };
 
-  // Handle work experience changes
   const handleWorkChange = (id, e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setWorkExperience(
       workExperience.map((work) =>
         work.id === id ? { ...work, [name]: value } : work
       )
-    )
-  }
+    );
+  };
 
-  // Handle project changes
   const handleProjectChange = (id, e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setProjects(
       projects.map((project) =>
         project.id === id ? { ...project, [name]: value } : project
       )
-    )
-  }
+    );
+  };
 
-  // Add new education field
+  const handleSkillChange = (e) => {
+    setCurrentSkill(e.target.value);
+  };
+
+  const handleCertificationChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentCertification({
+      ...currentCertification,
+      [name]: value,
+    });
+  };
+
+  const addSkill = (e) => {
+    e.preventDefault();
+    if (currentSkill.trim() !== "") {
+      setSkills([...skills, { id: Date.now(), name: currentSkill }]);
+      setCurrentSkill("");
+    }
+  };
+
+  const handleKeySkillPress = (e) => {
+    if (e.key === "Enter" && skillsAddRef.current.value.trim() !== "") {
+      e.preventDefault();
+      addSkill(e);
+      skillsAddRef.current.focus();
+    }
+  };
+
+  const addCertification = (e) => {
+    e.preventDefault();
+    if (currentCertification.name.trim() !== "") {
+      setCertifications([
+        ...certifications,
+        {
+          id: Date.now(),
+          ...currentCertification,
+        },
+      ]);
+      setCurrentCertification({
+        name: "",
+        issuer: "",
+        date: "",
+        link: "",
+      });
+    }
+  };
+
+  const removeSkill = (id, e) => {
+    e.preventDefault();
+    setSkills(skills.filter((skill) => skill.id !== id));
+  };
+
+  const removeCertification = (id, e) => {
+    e.preventDefault();
+    setCertifications(certifications.filter((cert) => cert.id !== id));
+  };
+
   const addEducation = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setEducationList([
       ...educationList,
       { id: Date.now(), degree: "", college: "", startYear: "", endYear: "" },
-    ])
-  }
+    ]);
+  };
 
-  // Remove education field
   const removeEducation = (id, e) => {
-    e.preventDefault()
-    setEducationList(educationList.filter((edu) => edu.id !== id))
-  }
+    e.preventDefault();
+    setEducationList(educationList.filter((edu) => edu.id !== id));
+  };
 
-  // Add work experience
   const addWorkExperience = (e) => {
-    e.preventDefault()
-    setShowWorkExperience(true)
+    e.preventDefault();
+    setShowWorkExperience(true);
     setWorkExperience([
       ...workExperience,
       { id: Date.now(), company: "", role: "", startYear: "", endYear: "" },
-    ])
-  }
+    ]);
+  };
 
-  // Remove work experience
   const removeWorkExperience = (id, e) => {
-    e.preventDefault()
-    const updatedWork = workExperience.filter((work) => work.id !== id)
-    setWorkExperience(updatedWork)
-    if (updatedWork.length === 0) setShowWorkExperience(false)
-  }
+    e.preventDefault();
+    const updatedWork = workExperience.filter((work) => work.id !== id);
+    setWorkExperience(updatedWork);
+    if (updatedWork.length === 0) setShowWorkExperience(false);
+  };
 
-  // Add project
   const addProject = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setProjects([
       ...projects,
       {
@@ -103,20 +248,24 @@ const Inputs = () => {
         codeLink: "",
         liveLink: "",
       },
-    ])
-  }
+    ]);
+  };
 
-  // Remove project
   const removeProject = (id, e) => {
-    e.preventDefault()
-    const updatedProjects = projects.filter((project) => project.id !== id)
-    setProjects(updatedProjects)
-  }
+    e.preventDefault();
+    const updatedProjects = projects.filter((project) => project.id !== id);
+    setProjects(updatedProjects);
+  };
 
   return (
     <div className={styles.main}>
       <form className={styles.formContainer}>
-        <div className={styles.title}>Fill your resume details here</div>
+        <div className={styles.title}>
+          Fill your resume details here
+          <button className={styles.clearBtn} onClick={clearAllData}>
+            Clear All
+          </button>
+        </div>
         <div className={styles.inputsBox}>
           <div className={styles.personalInfoContainer}>
             <div className={styles.titles}>Personal</div>
@@ -185,7 +334,7 @@ const Inputs = () => {
                     required
                   >
                     <option value="">Select Degree</option>
-                    <option value="SSC">SSC</option>
+                    <option value="School">School</option>
                     <option value="Intermediate">Intermediate</option>
                     <option value="B.Tech">B.Tech</option>
                     <option value="M.Tech">M.Tech</option>
@@ -215,7 +364,7 @@ const Inputs = () => {
                     maxLength={4}
                     onInput={(e) => {
                       if (e.target.value.length > 4) {
-                        e.target.value = e.target.value.slice(0, 4)
+                        e.target.value = e.target.value.slice(0, 4);
                       }
                     }}
                   />
@@ -230,9 +379,20 @@ const Inputs = () => {
                     maxLength={4}
                     onInput={(e) => {
                       if (e.target.value.length > 4) {
-                        e.target.value = e.target.value.slice(0, 4)
+                        e.target.value = e.target.value.slice(0, 4);
                       }
                     }}
+                  />
+                </div>
+                <div className={styles.courseContainer}>
+                  <input
+                    type="text"
+                    className={styles.courseDescription}
+                    name="courseDescription"
+                    placeholder="Course (E.g. Computer Science Engineering)"
+                    value={education.courseDescription}
+                    onChange={(e) => handleEducationChange(education.id, e)}
+                    required
                   />
                 </div>
                 {index === educationList.length - 1 &&
@@ -286,7 +446,7 @@ const Inputs = () => {
                       maxLength={4}
                       onInput={(e) => {
                         if (e.target.value.length > 4) {
-                          e.target.value = e.target.value.slice(0, 4)
+                          e.target.value = e.target.value.slice(0, 4);
                         }
                       }}
                     />
@@ -300,7 +460,7 @@ const Inputs = () => {
                       maxLength={4}
                       onInput={(e) => {
                         if (e.target.value.length > 4) {
-                          e.target.value = e.target.value.slice(0, 4)
+                          e.target.value = e.target.value.slice(0, 4);
                         }
                       }}
                     />
@@ -323,7 +483,6 @@ const Inputs = () => {
               +
             </button>
           </div>
-
           <div className={styles.projectsContainer}>
             <div className={styles.titles}>Projects</div>
             {projects.map((project, index) => (
@@ -339,15 +498,17 @@ const Inputs = () => {
                     required
                   />
                 </div>
-                <textarea
-                  className={styles.projectDesc}
-                  name="description"
-                  placeholder="Project Description"
-                  value={project.description}
-                  onChange={(e) => handleProjectChange(project.id, e)}
-                  required
-                  rows={3}
-                />
+                <div className={styles.addressContainer}>
+                  <textarea
+                    className={styles.projectDesc}
+                    name="description"
+                    placeholder="Project Description"
+                    value={project.description}
+                    onChange={(e) => handleProjectChange(project.id, e)}
+                    required
+                    rows={3}
+                  />
+                </div>
                 <div className={styles.projectLinksContainer}>
                   <input
                     type="url"
@@ -381,9 +542,110 @@ const Inputs = () => {
               +
             </button>
           </div>
+          <div className={styles.skillsContainer}>
+            <div className={styles.titles}>Skills</div>
+            <div className={styles.skillsInputContainer}>
+              <input
+                type="text"
+                ref={skillsAddRef}
+                className={styles.skillInput}
+                placeholder="Add a skill (e.g., JavaScript, React)"
+                value={currentSkill}
+                onChange={handleSkillChange}
+                onKeyDown={handleKeySkillPress}
+              />
+              <button className={styles.addSkillBtn} onClick={addSkill}>
+                Add Skill
+              </button>
+            </div>
+            <div className={styles.skillsList}>
+              {skills.map((skill) => (
+                <div key={skill.id} className={styles.skillItem}>
+                  <span>{skill.name}</span>
+                  <button
+                    className={styles.deleteSkillBtn}
+                    onClick={(e) => removeSkill(skill.id, e)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className={styles.certificationsContainer}>
+            <div className={styles.titles}>Certifications</div>
+            <div className={styles.certificationInputContainer}>
+              <input
+                type="text"
+                className={styles.certificationName}
+                name="name"
+                placeholder="Certification Name"
+                value={currentCertification.name}
+                onChange={handleCertificationChange}
+              />
+              <input
+                type="text"
+                className={styles.certificationIssuer}
+                name="issuer"
+                placeholder="Issuing Organization"
+                value={currentCertification.issuer}
+                onChange={handleCertificationChange}
+              />
+              <div className={styles.yearAndLinkContainer}>
+                <input
+                  type="text"
+                  className={styles.certificationDate}
+                  name="date"
+                  placeholder="Date Earned (MM/YYYY)"
+                  value={currentCertification.date}
+                  onChange={handleCertificationChange}
+                />
+                <input
+                  type="url"
+                  className={styles.certificationLink}
+                  name="link"
+                  placeholder="Credential URL (optional)"
+                  value={currentCertification.link}
+                  onChange={handleCertificationChange}
+                />
+              </div>
+              <button
+                className={styles.addCertificationBtn}
+                onClick={addCertification}
+              >
+                Add Certification
+              </button>
+            </div>
+            <div className={styles.certificationsList}>
+              {certifications.map((cert) => (
+                <div key={cert.id} className={styles.certificationItem}>
+                  <div className={styles.certificationDetails}>
+                    <h4>{cert.name}</h4>
+                    <p>
+                      {cert.issuer} • {cert.date}
+                    </p>
+                    {cert.link && (
+                      <a
+                        href={cert.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Credential
+                      </a>
+                    )}
+                  </div>
+                  <button
+                    className={styles.deleteCertificationBtn}
+                    onClick={(e) => removeCertification(cert.id, e)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </form>
-
       <div className={styles.resumePage}>
         <div className={styles.preview}>Preview</div>
         <div className={styles.resumeContainer}>
@@ -415,6 +677,7 @@ const Inputs = () => {
                       {edu.endYear || "Present"}
                     </p>
                   </div>
+                  <p>{edu.courseDescription}</p>
                 </div>
               ))}
             </div>
@@ -424,11 +687,13 @@ const Inputs = () => {
               <h2>Work Experience</h2>
               {workExperience.map((work) => (
                 <div key={work.id} className={styles.workItem}>
-                  <h3>{work.role}</h3>
-                  <p>{work.company}</p>
-                  <p>
-                    {work.startYear} - {work.endYear || "Present"}
-                  </p>
+                  <h3>{work.company}</h3>
+                  <div className={styles.collegeAndYear}>
+                    <p>{work.role}</p>
+                    <p>
+                      {work.startYear} - {work.endYear || "Present"}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -438,8 +703,30 @@ const Inputs = () => {
               <h2>Projects</h2>
               {projects.map((project) => (
                 <div key={project.id} className={styles.projectItem}>
-                  <h3>{project.name}</h3>
-                  <p>{project.description}</p>
+                  <div className={styles.projectNameAndLiveContainer}>
+                    <h3>{project.name}</h3>
+                    {project.liveLink && (
+                      <p>
+                        &#40;
+                        <a
+                          href={project.liveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {project.liveLink}
+                        </a>
+                        &#41;
+                      </p>
+                    )}
+                  </div>
+                  <ul className={styles.bulletList}>
+                    {project.description
+                      .split("\n")
+                      .filter((line) => line.trim() !== "")
+                      .map((line, index) => (
+                        <li key={index}>{line}</li>
+                      ))}
+                  </ul>
                   {project.codeLink && (
                     <p>
                       Code:{" "}
@@ -452,26 +739,53 @@ const Inputs = () => {
                       </a>
                     </p>
                   )}
-                  {project.liveLink && (
+                </div>
+              ))}
+            </div>
+          )}
+          {skills.length > 0 && (
+            <div className={styles.resumeSection}>
+              <h2>Skills</h2>
+              <div className={styles.skillsPreview}>
+                {skills.map((skill) => (
+                  <span key={skill.id} className={styles.skillPreviewItem}>
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          {certifications.length > 0 && (
+            <div className={styles.resumeSection}>
+              <h2>Certifications</h2>
+              <div className={styles.certificationsPreview}>
+                {certifications.map((cert) => (
+                  <div
+                    key={cert.id}
+                    className={styles.certificationPreviewItem}
+                  >
+                    <h4>{cert.name}</h4>
                     <p>
-                      Live:{" "}
+                      {cert.issuer} • {cert.date}
+                    </p>
+                    {cert.link && (
                       <a
-                        href={project.liveLink}
+                        href={cert.link}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {project.liveLink}
+                        View Credential
                       </a>
-                    </p>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Inputs
+export default Inputs;
