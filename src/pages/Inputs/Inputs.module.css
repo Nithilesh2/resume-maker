@@ -1,0 +1,290 @@
+.main {
+  height: 100vh;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  width: 100%;
+  color: white;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+}
+.preview {
+  font-size: 1.4rem;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid white;
+  border-radius: 15px;
+  width: 120px;
+  position: sticky;
+  background-color: rgb(52, 52, 52);
+  color: white;
+}
+.formContainer {
+  height: 100%;
+  width: 50%;
+  border: 1px solid white;
+  margin: 2rem 1rem 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  border-radius: 15px;
+  overflow-y: auto;
+}
+.title {
+  width: 100%;
+  text-align: center;
+  margin-top: 1.4rem;
+  font-size: 1.6rem;
+  text-decoration: underline;
+}
+.inputsBox {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+.personalInfoContainer,
+.educationInfoContainer,
+.previousWorkExperience,
+.projectsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.titles {
+  width: 100%;
+  font-size: 1.25rem;
+  padding-left: 1rem;
+  margin-top: 0.8rem;
+  font-weight: bold;
+}
+.namesContainer,
+.emailAndMobileContainer,
+.addressContainer,
+.degreeAndCollegeContainer,
+.yearContainer,
+.companyNameAndRoleContainer,
+.projectNameAndDescContainer,
+.projectLinksContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  gap: 1rem;
+}
+.fname,
+.lname,
+.email,
+.phone,
+.degree,
+.collegeName,
+.startYear,
+.endYear,
+.company,
+.role,
+.projectName,
+.codeLink,
+.liveLink {
+  height: 40px;
+  width: 50%;
+  border-radius: 5px;
+  padding-left: 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.address {
+  width: 100%;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  resize: none;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.degree,
+.collegeName,
+.startYear,
+.endYear {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.educationContainer,
+.workContainer,
+.projectItem {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.deleteBtn {
+  height: 30px;
+  width: 30px;
+  font-size: 1rem;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-weight: 600;
+  background-color: rgba(255, 0, 0, 0.674);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.addBtn {
+  height: 40px;
+  width: 40px;
+  font-size: 1.6rem;
+  border-radius: 10px;
+  background-color: rgba(3, 178, 3, 0.553);
+  color: white;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border: none;
+  cursor: pointer;
+  align-self: center;
+}
+.projectDesc {
+  width: 100%;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  resize: none;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.resumePage {
+  height: 98%;
+  width: 50%;
+  padding: 2rem;
+  background-color: white;
+  color: #333;
+  overflow-y: auto;
+  border-radius: 10px;
+}
+.resumeContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: "Arial", sans-serif;
+  padding: 20px;
+}
+.resumeHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #2c5364;
+}
+.resumeHeader h1 {
+  margin: 0;
+  color: #2c5364;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.contactInfo {
+  margin-top: 0.2rem;
+}
+.contactInfo p {
+  margin: 0.3rem 0;
+  color: #555;
+  font-size: 1.1rem;
+}
+.emailAndMobile{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.resumeSection {
+  margin-bottom: 1.5rem;
+}
+.resumeSection h2 {
+  color: #2c5364;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+.educationItem,
+.workItem,
+.projectItem {
+  margin-bottom: 1.2rem;
+}
+.educationItem h3,
+.workItem h3,
+.projectItem h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+.educationItem p,
+.workItem p,
+.projectItem p {
+  margin: 0.3rem 0;
+  color: #555;
+  font-size: 1rem;
+}
+.collegeAndYear {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.projectItem a {
+  color: #2c5364;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.projectItem a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .formContainer,
+  .resumePage {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .namesContainer,
+  .emailAndMobileContainer,
+  .degreeAndCollegeContainer,
+  .companyNameAndRoleContainer,
+  .projectLinksContainer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fname,
+  .lname,
+  .email,
+  .phone,
+  .degree,
+  .collegeName,
+  .company,
+  .role,
+  .codeLink,
+  .liveLink {
+    width: 100%;
+  }
+}
