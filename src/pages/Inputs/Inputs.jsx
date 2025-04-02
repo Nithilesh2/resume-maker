@@ -1,24 +1,21 @@
-import React, { useRef, useState, useEffect } from "react";
-import styles from "./Inputs.module.css";
+import React, { useRef, useState, useEffect } from "react"
+import styles from "./Inputs.module.css"
 
 const Inputs = () => {
   const loadFromLocalStorage = (key, defaultValue) => {
-    const saved = localStorage.getItem(key);
-    return saved ? JSON.parse(saved) : defaultValue;
-  };
+    const saved = localStorage.getItem(key)
+    return saved ? JSON.parse(saved) : defaultValue
+  }
 
-  const [formData, setFormData] = useState(
-    loadFromLocalStorage("resumeFormData", {
+  const initialState = {
+    formData: {
       firstName: "",
       lastName: "",
       email: "",
       phone: "",
       address: "",
-    })
-  );
-
-  const [educationList, setEducationList] = useState(
-    loadFromLocalStorage("resumeEducationList", [
+    },
+    educationList: [
       {
         id: 1,
         degree: "",
@@ -27,235 +24,244 @@ const Inputs = () => {
         startYear: "",
         endYear: "",
       },
-    ])
-  );
+    ],
+    showWorkExperience: false,
+    workExperience: [],
+    projects: [],
+    skills: [],
+    currentSkill: "",
+    certifications: [],
+    currentCertification: {
+      name: "",
+      issuer: "",
+      date: "",
+      link: "",
+    },
+    image: null,
+  }
 
-  const skillsAddRef = useRef();
+  const [state, setState] = useState(
+    loadFromLocalStorage("resumeState", initialState)
+  )
 
-  const [showWorkExperience, setShowWorkExperience] = useState(
-    loadFromLocalStorage("resumeShowWorkExperience", false)
-  );
-
-  const [workExperience, setWorkExperience] = useState(
-    loadFromLocalStorage("resumeWorkExperience", [])
-  );
-
-  const [projects, setProjects] = useState(
-    loadFromLocalStorage("resumeProjects", [])
-  );
-
-  const [skills, setSkills] = useState(
-    loadFromLocalStorage("resumeSkills", [])
-  );
-
-  const [currentSkill, setCurrentSkill] = useState("");
-
-  const [certifications, setCertifications] = useState(
-    loadFromLocalStorage("resumeCertifications", [])
-  );
-
-  const [currentCertification, setCurrentCertification] = useState({
-    name: "",
-    issuer: "",
-    date: "",
-    link: "",
-  });
+  const skillsAddRef = useRef()
 
   useEffect(() => {
-    localStorage.setItem("resumeFormData", JSON.stringify(formData));
-  }, [formData]);
-
-  useEffect(() => {
-    localStorage.setItem("resumeEducationList", JSON.stringify(educationList));
-  }, [educationList]);
-
-  useEffect(() => {
-    localStorage.setItem("resumeShowWorkExperience", JSON.stringify(showWorkExperience));
-  }, [showWorkExperience]);
-
-  useEffect(() => {
-    localStorage.setItem("resumeWorkExperience", JSON.stringify(workExperience));
-  }, [workExperience]);
-
-  useEffect(() => {
-    localStorage.setItem("resumeProjects", JSON.stringify(projects));
-  }, [projects]);
-
-  useEffect(() => {
-    localStorage.setItem("resumeSkills", JSON.stringify(skills));
-  }, [skills]);
-
-  useEffect(() => {
-    localStorage.setItem("resumeCertifications", JSON.stringify(certifications));
-  }, [certifications]);
+    localStorage.setItem("resumeState", JSON.stringify(state))
+  }, [state])
 
   const clearAllData = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (window.confirm("Are you sure you want to clear all data?")) {
-      localStorage.clear();
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        address: "",
-      });
-      setEducationList([{
-        id: 1,
-        degree: "",
-        college: "",
-        courseDescription: "",
-        startYear: "",
-        endYear: "",
-      }]);
-      setShowWorkExperience(false);
-      setWorkExperience([]);
-      setProjects([]);
-      setSkills([]);
-      setCertifications([]);
+      localStorage.clear()
+      setState(initialState)
     }
-  };
+  }
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+    const { name, value } = e.target
+    setState((prev) => ({
+      ...prev,
+      formData: {
+        ...prev.formData,
+        [name]: value,
+      },
+    }))
+  }
 
   const handleEducationChange = (id, e) => {
-    const { name, value } = e.target;
-    setEducationList(
-      educationList.map((edu) =>
+    const { name, value } = e.target
+    setState((prev) => ({
+      ...prev,
+      educationList: prev.educationList.map((edu) =>
         edu.id === id ? { ...edu, [name]: value } : edu
-      )
-    );
-  };
+      ),
+    }))
+  }
 
   const handleWorkChange = (id, e) => {
-    const { name, value } = e.target;
-    setWorkExperience(
-      workExperience.map((work) =>
+    const { name, value } = e.target
+    setState((prev) => ({
+      ...prev,
+      workExperience: prev.workExperience.map((work) =>
         work.id === id ? { ...work, [name]: value } : work
-      )
-    );
-  };
+      ),
+    }))
+  }
 
   const handleProjectChange = (id, e) => {
-    const { name, value } = e.target;
-    setProjects(
-      projects.map((project) =>
+    const { name, value } = e.target
+    setState((prev) => ({
+      ...prev,
+      projects: prev.projects.map((project) =>
         project.id === id ? { ...project, [name]: value } : project
-      )
-    );
-  };
+      ),
+    }))
+  }
 
   const handleSkillChange = (e) => {
-    setCurrentSkill(e.target.value);
-  };
+    setState((prev) => ({
+      ...prev,
+      currentSkill: e.target.value,
+    }))
+  }
 
   const handleCertificationChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentCertification({
-      ...currentCertification,
-      [name]: value,
-    });
-  };
+    const { name, value } = e.target
+    setState((prev) => ({
+      ...prev,
+      currentCertification: {
+        ...prev.currentCertification,
+        [name]: value,
+      },
+    }))
+  }
 
   const addSkill = (e) => {
-    e.preventDefault();
-    if (currentSkill.trim() !== "") {
-      setSkills([...skills, { id: Date.now(), name: currentSkill }]);
-      setCurrentSkill("");
+    e.preventDefault()
+    if (state.currentSkill.trim() !== "") {
+      setState((prev) => ({
+        ...prev,
+        skills: [...prev.skills, { id: Date.now(), name: prev.currentSkill }],
+        currentSkill: "",
+      }))
     }
-  };
+  }
 
   const handleKeySkillPress = (e) => {
     if (e.key === "Enter" && skillsAddRef.current.value.trim() !== "") {
-      e.preventDefault();
-      addSkill(e);
-      skillsAddRef.current.focus();
+      e.preventDefault()
+      addSkill(e)
+      skillsAddRef.current.focus()
     }
-  };
+  }
 
   const addCertification = (e) => {
-    e.preventDefault();
-    if (currentCertification.name.trim() !== "") {
-      setCertifications([
-        ...certifications,
-        {
-          id: Date.now(),
-          ...currentCertification,
+    e.preventDefault()
+    if (state.currentCertification.name.trim() !== "") {
+      setState((prev) => ({
+        ...prev,
+        certifications: [
+          ...prev.certifications,
+          {
+            id: Date.now(),
+            ...prev.currentCertification,
+          },
+        ],
+        currentCertification: {
+          name: "",
+          issuer: "",
+          date: "",
+          link: "",
         },
-      ]);
-      setCurrentCertification({
-        name: "",
-        issuer: "",
-        date: "",
-        link: "",
-      });
+      }))
     }
-  };
+  }
 
   const removeSkill = (id, e) => {
-    e.preventDefault();
-    setSkills(skills.filter((skill) => skill.id !== id));
-  };
+    e.preventDefault()
+    setState((prev) => ({
+      ...prev,
+      skills: prev.skills.filter((skill) => skill.id !== id),
+    }))
+  }
 
   const removeCertification = (id, e) => {
-    e.preventDefault();
-    setCertifications(certifications.filter((cert) => cert.id !== id));
-  };
+    e.preventDefault()
+    setState((prev) => ({
+      ...prev,
+      certifications: prev.certifications.filter((cert) => cert.id !== id),
+    }))
+  }
 
   const addEducation = (e) => {
-    e.preventDefault();
-    setEducationList([
-      ...educationList,
-      { id: Date.now(), degree: "", college: "", startYear: "", endYear: "" },
-    ]);
-  };
+    e.preventDefault()
+    setState((prev) => ({
+      ...prev,
+      educationList: [
+        ...prev.educationList,
+        { id: Date.now(), degree: "", college: "", startYear: "", endYear: "" },
+      ],
+    }))
+  }
 
   const removeEducation = (id, e) => {
-    e.preventDefault();
-    setEducationList(educationList.filter((edu) => edu.id !== id));
-  };
+    e.preventDefault()
+    setState((prev) => ({
+      ...prev,
+      educationList: prev.educationList.filter((edu) => edu.id !== id),
+    }))
+  }
 
   const addWorkExperience = (e) => {
-    e.preventDefault();
-    setShowWorkExperience(true);
-    setWorkExperience([
-      ...workExperience,
-      { id: Date.now(), company: "", role: "", startYear: "", endYear: "" },
-    ]);
-  };
+    e.preventDefault()
+    setState((prev) => ({
+      ...prev,
+      showWorkExperience: true,
+      workExperience: [
+        ...prev.workExperience,
+        { id: Date.now(), company: "", role: "", startYear: "", endYear: "" },
+      ],
+    }))
+  }
 
   const removeWorkExperience = (id, e) => {
-    e.preventDefault();
-    const updatedWork = workExperience.filter((work) => work.id !== id);
-    setWorkExperience(updatedWork);
-    if (updatedWork.length === 0) setShowWorkExperience(false);
-  };
+    e.preventDefault()
+    const updatedWork = state.workExperience.filter((work) => work.id !== id)
+    setState((prev) => ({
+      ...prev,
+      workExperience: updatedWork,
+      showWorkExperience: updatedWork.length > 0,
+    }))
+  }
 
   const addProject = (e) => {
-    e.preventDefault();
-    setProjects([
-      ...projects,
-      {
-        id: Date.now(),
-        name: "",
-        description: "",
-        codeLink: "",
-        liveLink: "",
-      },
-    ]);
-  };
+    e.preventDefault()
+    setState((prev) => ({
+      ...prev,
+      projects: [
+        ...prev.projects,
+        {
+          id: Date.now(),
+          name: "",
+          description: "",
+          codeLink: "",
+          liveLink: "",
+        },
+      ],
+    }))
+  }
 
   const removeProject = (id, e) => {
-    e.preventDefault();
-    const updatedProjects = projects.filter((project) => project.id !== id);
-    setProjects(updatedProjects);
-  };
+    e.preventDefault()
+    setState((prev) => ({
+      ...prev,
+      projects: prev.projects.filter((project) => project.id !== id),
+    }))
+  }
+
+  const handleFileChange = (eve) => {
+    const fileImage = eve.target.files[0]
+    if (fileImage) {
+      setState((prev) => ({
+        ...prev,
+        image: URL.createObjectURL(fileImage),
+      }))
+    }
+  }
+
+  const {
+    formData,
+    educationList,
+    showWorkExperience,
+    workExperience,
+    projects,
+    skills,
+    currentSkill,
+    certifications,
+    currentCertification,
+    image,
+  } = state
 
   return (
     <div className={styles.main}>
@@ -268,6 +274,26 @@ const Inputs = () => {
         </div>
         <div className={styles.inputsBox}>
           <div className={styles.personalInfoContainer}>
+            <div className={styles.imageContainer}>
+              <input
+                type="file"
+                accept="image/*"
+                className={styles.fileShow}
+                onChange={handleFileChange}
+              />
+
+              <div>
+                {image ? (
+                  <img
+                    className={styles.imageShow}
+                    src={image}
+                    alt="userIcon"
+                  />
+                ) : (
+                  "No image"
+                )}
+              </div>
+            </div>
             <div className={styles.titles}>Personal</div>
             <div className={styles.namesContainer}>
               <input
@@ -364,7 +390,7 @@ const Inputs = () => {
                     maxLength={4}
                     onInput={(e) => {
                       if (e.target.value.length > 4) {
-                        e.target.value = e.target.value.slice(0, 4);
+                        e.target.value = e.target.value.slice(0, 4)
                       }
                     }}
                   />
@@ -379,7 +405,7 @@ const Inputs = () => {
                     maxLength={4}
                     onInput={(e) => {
                       if (e.target.value.length > 4) {
-                        e.target.value = e.target.value.slice(0, 4);
+                        e.target.value = e.target.value.slice(0, 4)
                       }
                     }}
                   />
@@ -446,7 +472,7 @@ const Inputs = () => {
                       maxLength={4}
                       onInput={(e) => {
                         if (e.target.value.length > 4) {
-                          e.target.value = e.target.value.slice(0, 4);
+                          e.target.value = e.target.value.slice(0, 4)
                         }
                       }}
                     />
@@ -460,7 +486,7 @@ const Inputs = () => {
                       maxLength={4}
                       onInput={(e) => {
                         if (e.target.value.length > 4) {
-                          e.target.value = e.target.value.slice(0, 4);
+                          e.target.value = e.target.value.slice(0, 4)
                         }
                       }}
                     />
@@ -650,18 +676,27 @@ const Inputs = () => {
         <div className={styles.preview}>Preview</div>
         <div className={styles.resumeContainer}>
           <div className={styles.resumeHeader}>
-            <h1>
-              {formData.firstName} {formData.lastName}
-            </h1>
-            <div className={styles.contactInfo}>
-              <div className={styles.emailAndMobile}>
-                {formData.email && <p>{formData.email}</p>}
-                {formData.email && formData.phone && (
-                  <span style={{ padding: "0 0.24rem" }}> ||</span>
-                )}
-                {formData.phone && <p>{formData.phone}</p>}
+            <div className={styles.resumeHeaderLeft}>
+              <h1>
+                {formData.firstName} {formData.lastName}
+              </h1>
+              <div className={styles.contactInfo}>
+                <div className={styles.emailAndMobile}>
+                  {formData.email && <p>{formData.email}</p>}
+                  {formData.email && formData.phone && (
+                    <span style={{ padding: "0 0.24rem" }}> ||</span>
+                  )}
+                  {formData.phone && <p>{formData.phone}</p>}
+                </div>
+                {formData.address && <p>{formData.address}</p>}
               </div>
-              {formData.address && <p>{formData.address}</p>}
+            </div>
+            <div className={styles.resumeHeaderRight}>
+              {image ? (
+                <img className={styles.imageShow} src={image} alt="userIcon" />
+              ) : (
+                "No image"
+              )}
             </div>
           </div>
           {educationList.length > 0 && educationList[0].degree && (
@@ -785,7 +820,7 @@ const Inputs = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Inputs;
+export default Inputs
