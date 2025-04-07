@@ -36,6 +36,7 @@ const Inputs = () => {
       issuer: "",
       date: "",
       link: "",
+      certificateDescription: "",
     },
     image: null,
   }
@@ -153,6 +154,7 @@ const Inputs = () => {
           issuer: "",
           date: "",
           link: "",
+          certificateDescription: ""
         },
       }))
     }
@@ -617,6 +619,14 @@ const Inputs = () => {
                 value={currentCertification.issuer}
                 onChange={handleCertificationChange}
               />
+              <textarea
+                className={styles.address}
+                name="certificateDescription"
+                placeholder="Certification Description"
+                value={currentCertification.certificateDescription}
+                onChange={handleInputChange}
+                rows={3}
+              />
               <div className={styles.yearAndLinkContainer}>
                 <input
                   type="text"
@@ -673,7 +683,11 @@ const Inputs = () => {
         </div>
       </form>
       <div className={styles.resumePage}>
-        <div className={styles.preview}>Preview</div>
+        <div className={styles.printButtonContainer}>
+          <button type="button" className={styles.button}>
+            Print
+          </button>
+        </div>
         <div className={styles.resumeContainer}>
           <div className={styles.resumeHeader}>
             <div className={styles.resumeHeaderLeft}>
@@ -803,6 +817,15 @@ const Inputs = () => {
                     <p>
                       {cert.issuer} • {cert.date}
                     </p>
+                    <ul className={styles.bulletList}>
+                    {/* {cert.certificateDescription
+                      .split("\n")
+                      .filter((line) => line.trim() !== "")
+                      .map((line, index) => (
+                        <li key={index}>{line}</li>
+                      ))} */}
+                      {cert.certificateDescription}
+                  </ul>
                     {cert.link && (
                       <a
                         href={cert.link}
