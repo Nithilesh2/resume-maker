@@ -13,6 +13,8 @@ const Inputs = () => {
       lastName: "",
       email: "",
       phone: "",
+      linkedin: "",
+      github: "",
       address: "",
     },
     educationList: [
@@ -154,7 +156,7 @@ const Inputs = () => {
           issuer: "",
           date: "",
           link: "",
-          certificateDescription: ""
+          certificateDescription: "",
         },
       }))
     }
@@ -265,6 +267,13 @@ const Inputs = () => {
     image,
   } = state
 
+  const hasCurrentCertificationData =
+    currentCertification.name ||
+    currentCertification.issuer ||
+    currentCertification.date ||
+    currentCertification.link ||
+    currentCertification.certificateDescription
+
   return (
     <div className={styles.main}>
       <form className={styles.formContainer}>
@@ -333,6 +342,26 @@ const Inputs = () => {
                 className={styles.phone}
                 placeholder="Mobile Number"
                 value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className={styles.socialLinksContainer}>
+              <input
+                type="text"
+                name="linkedin"
+                className={styles.linkedin}
+                placeholder="LinkedIn URL"
+                value={formData.linkedin}
+                onChange={handleInputChange}
+                required
+              />
+              <input
+                type="text"
+                name="github"
+                className={styles.github}
+                placeholder="Github"
+                value={formData.github}
                 onChange={handleInputChange}
                 required
               />
@@ -624,7 +653,7 @@ const Inputs = () => {
                 name="certificateDescription"
                 placeholder="Certification Description"
                 value={currentCertification.certificateDescription}
-                onChange={handleInputChange}
+                onChange={handleCertificationChange}
                 rows={3}
               />
               <div className={styles.yearAndLinkContainer}>
@@ -632,7 +661,7 @@ const Inputs = () => {
                   type="text"
                   className={styles.certificationDate}
                   name="date"
-                  placeholder="Date Earned (MM/YYYY)"
+                  placeholder="From(MM/YYYY) - To(MM/YYYY)"
                   value={currentCertification.date}
                   onChange={handleCertificationChange}
                 />
@@ -684,7 +713,11 @@ const Inputs = () => {
       </form>
       <div className={styles.resumePage}>
         <div className={styles.printButtonContainer}>
-          <button type="button" className={styles.button}>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => window.print()}
+          >
             Print
           </button>
         </div>
@@ -696,13 +729,41 @@ const Inputs = () => {
               </h1>
               <div className={styles.contactInfo}>
                 <div className={styles.emailAndMobile}>
-                  {formData.email && <p>{formData.email}</p>}
+                  {formData.email && (
+                    <p>
+                      <a href={`mailto:${formData.email}`}>{formData.email}</a>
+                    </p>
+                  )}
+
                   {formData.email && formData.phone && (
                     <span style={{ padding: "0 0.24rem" }}> ||</span>
                   )}
                   {formData.phone && <p>{formData.phone}</p>}
                 </div>
                 {formData.address && <p>{formData.address}</p>}
+                {formData.linkedin && (
+                  <span>
+                    <a
+                      href={formData.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      LinkedIn
+                    </a>
+                  </span>
+                )}
+                {formData.github && (
+                  <span>
+                    {" || "}
+                    <a
+                      href={formData.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Github
+                    </a>
+                  </span>
+                )}
               </div>
             </div>
             <div className={styles.resumeHeaderRight}>
@@ -718,9 +779,11 @@ const Inputs = () => {
               <h2>Education</h2>
               {educationList.map((edu) => (
                 <div key={edu.id} className={styles.educationItem}>
-                  <h3>{edu.degree}</h3>
                   <div className={styles.collegeAndYear}>
-                    <p>{edu.college}</p>
+                    <p className={styles.sideBySide}>
+                      <h3>{edu.degree}</h3>
+                      <h3>{edu.college}</h3>
+                    </p>
                     <p>
                       {edu.startYear} {edu.startYear && "-"}{" "}
                       {edu.endYear || "Present"}
@@ -804,7 +867,7 @@ const Inputs = () => {
               </div>
             </div>
           )}
-          {certifications.length > 0 && (
+          {(certifications.length > 0 || hasCurrentCertificationData) && (
             <div className={styles.resumeSection}>
               <h2>Certifications</h2>
               <div className={styles.certificationsPreview}>
@@ -813,19 +876,17 @@ const Inputs = () => {
                     key={cert.id}
                     className={styles.certificationPreviewItem}
                   >
-                    <h4>{cert.name}</h4>
-                    <p>
-                      {cert.issuer} • {cert.date}
-                    </p>
+                    <h4 className={styles.certificationC}>
+                      {cert.name} by {cert.issuer} <p>({cert.date})</p>
+                    </h4>
                     <ul className={styles.bulletList}>
-                    {/* {cert.certificateDescription
-                      .split("\n")
-                      .filter((line) => line.trim() !== "")
-                      .map((line, index) => (
-                        <li key={index}>{line}</li>
-                      ))} */}
-                      {cert.certificateDescription}
-                  </ul>
+                      {cert.certificateDescription
+                        .split("\n")
+                        .filter((line) => line.trim() !== "")
+                        .map((line, index) => (
+                          <li key={index}>{line}</li>
+                        ))}
+                    </ul>
                     {cert.link && (
                       <a
                         href={cert.link}
@@ -837,6 +898,38 @@ const Inputs = () => {
                     )}
                   </div>
                 ))}
+                {hasCurrentCertificationData && (
+                  <div className={styles.certificationPreviewItem}>
+                    <h4 className={styles.certificationC}>
+                      {currentCertification.name && currentCertification.name}{" "}
+                      by{" "}
+                      {currentCertification.issuer &&
+                        `${currentCertification.issuer}`}{" "}
+                      <p>
+                        (
+                        {currentCertification.date && currentCertification.date}
+                        )
+                      </p>
+                    </h4>
+                    <ul className={styles.bulletList}>
+                      {currentCertification.certificateDescription
+                        .split("\n")
+                        .filter((line) => line.trim() !== "")
+                        .map((line, index) => (
+                          <li key={index}>{line}</li>
+                        ))}
+                    </ul>
+                    {currentCertification.link && (
+                      <a
+                        href={currentCertification.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Credential
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
