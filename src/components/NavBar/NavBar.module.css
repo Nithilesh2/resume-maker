@@ -1,0 +1,22 @@
+.navbar {
+  height: 75px;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5rem 0 2rem;
+  color: white;
+  font-family: "Lato", sans-serif;
+}
+.logoImage {
+  height: 60px;
+  width: 60px;
+}
+.right {
+  list-style-type: none;
+  display: flex;
+  gap: 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
